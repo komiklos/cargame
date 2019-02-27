@@ -21,13 +21,16 @@ public class Game{
     printUpperRoad();
     printCar(0);
 
+
+
+  }
+  public void run(){
+    int pieceCounter = 0;
     while (true) {
       try
       {
           Thread.sleep(100);
-          clearUpperRoad();
-          moveRoad();
-          printUpperRoad();
+          pieceCounter = holeGen(16,pieceCounter);
 
       }
       catch(InterruptedException ex)
@@ -35,9 +38,20 @@ public class Game{
         Thread.currentThread().interrupt();
       }
     }
-
   }
-
+  private int holeGen(int distance, int pieceCounter){
+    clearUpperRoad();
+    if(pieceCounter<distance){
+      moveRoad('#');
+      pieceCounter++;
+    }
+    else{
+      moveRoad(' ');
+      pieceCounter = 0;
+    }
+    printUpperRoad();
+    return pieceCounter;
+  }
   private String generateLowerRoad(){
     String lowerRoad = "";
     for(int i = 0; i< this.terminalWidth; i++){
@@ -50,9 +64,9 @@ public class Game{
       this.road.add('#');
     }
   }
-  private void moveRoad(){
+  private void moveRoad(char roadPiece){
     this.road.remove();
-    this.road.add(' ');
+    this.road.add(roadPiece);
   }
   private void clearUpperRoad(){
     t.moveTo(this.terminalHeight-1,terminalWidth);
@@ -72,7 +86,7 @@ public class Game{
     car[2] = "(   _    _ _\\";
     car[3] = "=`-(_)--(_)-'";
     for(int i = 0; i < 4; i++){
-      t.moveTo(this.terminalHeight-5+i,this.terminalWidth/2);
+      t.moveTo(this.terminalHeight-5+i,this.terminalWidth/4);
       System.out.print(car[i]);
     }
 
