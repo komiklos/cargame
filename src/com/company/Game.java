@@ -12,8 +12,8 @@ public class Game {
   private int terminalWidth;
   private int score;
   private Terminal t = new Terminal();
-  private ArrayList<Character> road = new ArrayList<>();
-  private int time = 80;
+  private String road = "";
+  private int time = 40;
 
   public void init(){
     t.clearScreen();
@@ -33,13 +33,12 @@ public class Game {
     int rangeOfRandom = 71; //have to be an odd number, mégegy helyen bekéri
     int remainingHoles = 0;
     int[] holeArray = new int[3];
-    int time = 40;
     char wheel = '-';
     int minRefreshMs = 30;
 
     while (true) {
       try{
-          Thread.sleep(time);
+          Thread.sleep(this.time);
           checkDeath(0);
           printScore();
           holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
@@ -90,7 +89,7 @@ public class Game {
   }
 
   private boolean checkDeath(int jumpStatus){
-    if(road.get(this.terminalWidth/4 + 4) == ' ' || road.get(this.terminalWidth/4 + 9) == ' '){
+    if(road.charAt(this.terminalWidth/4 + 4) == ' ' || road.charAt(this.terminalWidth/4 + 9) == ' '){
       if(jumpStatus == 0){
         return true;
       }
@@ -151,13 +150,12 @@ public class Game {
 
   private void generateRoad(){
     for(int i = 0; i< this.terminalWidth; i++){
-      this.road.add('#');
+      this.road+="#";
     }
   }
 
   private void moveRoad(char roadPiece){
-    this.road.remove(0);
-    this.road.add(roadPiece);
+    this.road = this.road.substring(1,this.road.length()) + roadPiece;
   }
 
   private void clearUpperRoad(){
@@ -167,9 +165,7 @@ public class Game {
 
   private void printUpperRoad(){
     t.moveTo(this.terminalHeight-1,1);
-    for(char ch : this.road){
-      System.out.print(ch);
-    }
+    System.out.print(this.road);
   }
 
   private void printCar(int status, int topOfCar){
