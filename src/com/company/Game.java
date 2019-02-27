@@ -22,7 +22,18 @@ public class Game{
     printCar(0);
 
     while (true) {
+      try
+      {
+          Thread.sleep(100);
+          clearUpperRoad();
+          moveRoad();
+          printUpperRoad();
 
+      }
+      catch(InterruptedException ex)
+      {
+        Thread.currentThread().interrupt();
+      }
     }
 
   }
@@ -38,9 +49,16 @@ public class Game{
     for(int i = 0; i< this.terminalWidth; i++){
       this.road.add('#');
     }
-
-
   }
+  private void moveRoad(){
+    this.road.remove();
+    this.road.add(' ');
+  }
+  private void clearUpperRoad(){
+    t.moveTo(this.terminalHeight-1,terminalWidth);
+    t.eraseLine();
+  }
+
   private void printUpperRoad(){
     t.moveTo(this.terminalHeight-1,1);
     for(char ch : this.road){
