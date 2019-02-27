@@ -10,6 +10,7 @@ public class Game {
   private int[] terminalSize = new int[2];
   private int terminalHeight;
   private int terminalWidth;
+  private int score;
   private Terminal t = new Terminal();
   private ArrayList<Character> road = new ArrayList<>();
 
@@ -18,6 +19,7 @@ public class Game {
 
     this.terminalSize = t.getTerminalSize();
     this.terminalHeight = this.terminalSize[0];
+    this.score = 100;
     this.terminalWidth = this.terminalSize[1];
     t.moveTo(terminalHeight,1);
     System.out.print(generateLowerRoad());
@@ -31,15 +33,18 @@ public class Game {
     int rangeOfRandom = 71; //have to be an odd number, mégegy helyen bekéri
     int remainingHoles = 0;
     int[] holeArray = new int[3];
-
+    int time = 40;
     while (true) {
       try{
-          Thread.sleep(100);
+          Thread.sleep(time);
           checkDeath(0);
           holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
           remainingHoles = holeArray[2];
+          if(score%500==0 && time >40){
+            time-=10;
+          }
       }
       catch(InterruptedException ex){
         Thread.currentThread().interrupt();
@@ -48,11 +53,14 @@ public class Game {
   }
 
   private boolean checkDeath(int jumpStatus){
+    if(road.get(this.terminalWidth/4 + 4) == ' ' || road.get(this.terminalWidth/4 + 9) == ' '){
       if(jumpStatus == 0){
-          if(road.get(this.terminalWidth/4 + 4) == ' ' || road.get(this.terminalWidth/4 + 9) == ' '){
-              return true;
-          }
+        return true;
       }
+      else{
+        this.score+=100;
+      }
+    }
       return false;
   }
 
