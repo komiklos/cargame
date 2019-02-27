@@ -34,6 +34,7 @@ public class Game {
     int remainingHoles = 0;
     int[] holeArray = new int[3];
     int time = 40;
+    char wheel = '-';
     while (true) {
       try{
           Thread.sleep(time);
@@ -45,13 +46,39 @@ public class Game {
           if(score%500==0 && time >40){
             time-=10;
           }
+          switch(wheel){
+            case '-':
+              moveWheel('\\');
+              wheel = '\\';
+              break;
+            case '\\':
+              moveWheel('|');
+              wheel = '|';
+              break;
+            case '|':
+              moveWheel('/');
+              wheel = '/';
+              break;
+            case '/':
+              moveWheel('-');
+              wheel = '-';
+              break;
+
+          }
+
+
       }
       catch(InterruptedException ex){
         Thread.currentThread().interrupt();
       }
     }
   }
-
+  private void moveWheel(char wheel){
+    t.moveTo(this.terminalHeight-2,this.terminalWidth/4 + 4);
+    System.out.print(wheel);
+    t.moveTo(this.terminalHeight-2,this.terminalWidth/4 + 9);
+    System.out.print(wheel);
+  }
   private boolean checkDeath(int jumpStatus){
     if(road.get(this.terminalWidth/4 + 4) == ' ' || road.get(this.terminalWidth/4 + 9) == ' '){
       if(jumpStatus == 0){
