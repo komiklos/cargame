@@ -27,15 +27,17 @@ public class Game {
 
   public void run(){
     int pieceCounter = 0;
-    int rangeOfRandom = 95; //have to be an odd number, mégegy helyen bekéri
-    int[] holeArray = new int[2];
+    int rangeOfRandom = 71; //have to be an odd number, mégegy helyen bekéri
+    int remainingHoles = 0;
+    int[] holeArray = new int[3];
 
     while (true) {
       try{
           Thread.sleep(100);
-          holeArray = holeGen(25, pieceCounter, rangeOfRandom);
+          holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
+          remainingHoles = holeArray[2];
       }
       catch(InterruptedException ex){
         Thread.currentThread().interrupt();
@@ -43,7 +45,7 @@ public class Game {
     }
   }
 
-  private int[] holeGen(int distance, int pieceCounter, int rangeOfRandom){
+  private int[] holeGen(int distance, int pieceCounter, int rangeOfRandom,int remainingHoles){
     clearUpperRoad();
     Random randomGenerator = new Random();
     if(pieceCounter<distance){
@@ -51,20 +53,35 @@ public class Game {
       pieceCounter++;
     }
     else{
-      Integer randomInt = randomGenerator.nextInt(rangeOfRandom) + 1;
-      if (randomInt.equals(1)) {
+      Integer randomInt;
+      if(remainingHoles == 0){
+        randomInt = randomGenerator.nextInt(rangeOfRandom) + 1;
+      }
+      else{
+        randomInt = 1;
+      }
+
+      if (randomInt.equals(1)){
+        if(remainingHoles == 0){
+          remainingHoles = randomGenerator.nextInt(5)+1;
+        }
         moveRoad(' ');
-        pieceCounter = 0;
-        rangeOfRandom = 111;
-      } else {
+        remainingHoles--;
+        if(remainingHoles==0){
+          pieceCounter = 0;
+          rangeOfRandom = 71;
+        }
+      }
+      else {
         rangeOfRandom -= 2;
         moveRoad('#');
       }
     }
     printUpperRoad();
-    int[] resultArray = new int[2];
+    int[] resultArray = new int[3];
     resultArray[0] = pieceCounter;
     resultArray[1] = rangeOfRandom;
+    resultArray[2] = remainingHoles;
 
     return resultArray;
   }
