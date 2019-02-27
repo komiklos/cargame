@@ -11,10 +11,11 @@ public class Game {
   private int terminalHeight;
   private int terminalWidth;
   private Terminal t = new Terminal();
-  private Queue<Character> road = new LinkedList<>();
+  private ArrayList<Character> road = new ArrayList<>();
 
   public void init(){
     t.clearScreen();
+
     this.terminalSize = t.getTerminalSize();
     this.terminalHeight = this.terminalSize[0];
     this.terminalWidth = this.terminalSize[1];
@@ -34,6 +35,7 @@ public class Game {
     while (true) {
       try{
           Thread.sleep(100);
+          checkDeath(0);
           holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
@@ -43,6 +45,15 @@ public class Game {
         Thread.currentThread().interrupt();
       }
     }
+  }
+
+  private boolean checkDeath(int jumpStatus){
+      if(jumpStatus == 0){
+          if(road.get(this.terminalWidth/4 + 4) == ' ' || road.get(this.terminalWidth/4 + 9) == ' '){
+              return true;
+          }
+      }
+      return false;
   }
 
   private int[] holeGen(int distance, int pieceCounter, int rangeOfRandom,int remainingHoles){
@@ -101,7 +112,7 @@ public class Game {
   }
 
   private void moveRoad(char roadPiece){
-    this.road.remove();
+    this.road.remove(0);
     this.road.add(roadPiece);
   }
 
@@ -122,7 +133,7 @@ public class Game {
     car[0] = "  ______";
     car[1] = " /|_||_\\`.__";
     car[2] = "(   _    _ _\\";
-    car[3] = "=`-(_)--(_)-'";
+    car[3] = "=`-(o)--(o)-'";
     for(int i = 0; i < 4; i++){
       t.moveTo(this.terminalHeight-topOfCar+i,this.terminalWidth/4);
       System.out.print(car[i]);
