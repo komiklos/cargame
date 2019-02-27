@@ -26,11 +26,16 @@ public class Game{
   }
   public void run(){
     int pieceCounter = 0;
+    int rangeOfRandom = 95; //have to be an odd number, mégegy helyen bekéri
+    int[] holeArray = new int[2];
+
     while (true) {
       try
       {
           Thread.sleep(100);
-          pieceCounter = holeGen(16,pieceCounter);
+          holeArray = holeGen(25, pieceCounter, rangeOfRandom);
+          pieceCounter = holeArray[0];
+          rangeOfRandom = holeArray[1];
 
       }
       catch(InterruptedException ex)
@@ -39,18 +44,30 @@ public class Game{
       }
     }
   }
-  private int holeGen(int distance, int pieceCounter){
+  private int[] holeGen(int distance, int pieceCounter, int rangeOfRandom){
     clearUpperRoad();
+    Random randomGenerator = new Random();
     if(pieceCounter<distance){
       moveRoad('#');
       pieceCounter++;
     }
     else{
-      moveRoad(' ');
-      pieceCounter = 0;
+      Integer randomInt = randomGenerator.nextInt(rangeOfRandom) + 1;
+      if (randomInt.equals(1)) {
+        moveRoad(' ');
+        pieceCounter = 0;
+        rangeOfRandom = 111;
+      } else {
+        rangeOfRandom -= 2;
+        moveRoad('#');
+      }
+
     }
     printUpperRoad();
-    return pieceCounter;
+    int[] resultArray = new int[2];
+    resultArray[0] = pieceCounter;
+    resultArray[1] = rangeOfRandom;
+    return resultArray;
   }
   private String generateLowerRoad(){
     String lowerRoad = "";
