@@ -22,7 +22,7 @@ public class Game {
     System.out.print(generateLowerRoad());
     generateRoad();
     printUpperRoad();
-    printCar(0);
+    printCar(0,5);
   }
 
   public void run(){
@@ -100,14 +100,14 @@ public class Game {
     }
   }
 
-  private void printCar(int status){
+  private void printCar(int status, int topOfCar){
     String[] car = new String[4];
     car[0] = "  ______";
     car[1] = " /|_||_\\`.__";
     car[2] = "(   _    _ _\\";
     car[3] = "=`-(_)--(_)-'";
     for(int i = 0; i < 4; i++){
-      t.moveTo(this.terminalHeight-5+i,this.terminalWidth/4);
+      t.moveTo(this.terminalHeight-topOfCar+i,this.terminalWidth/4);
       System.out.print(car[i]);
     }
   }
