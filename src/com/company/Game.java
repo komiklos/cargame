@@ -12,7 +12,7 @@ public class Game{
   private Queue<Character> road = new LinkedList<>();
   public void init(){
     t.clearScreen();
-    this.terminalSize = getTerminalSize();
+    this.terminalSize = t.getTerminalSize();
     this.terminalHeight = this.terminalSize[0];
     this.terminalWidth = this.terminalSize[1];
     t.moveTo(terminalHeight,1);
@@ -20,37 +20,13 @@ public class Game{
     generateRoad();
     printUpperRoad();
     printCar(0);
-    System.out.print(terminalWidth);
 
     while (true) {
 
     }
 
   }
-  private int[] getTerminalSize(){
-    t.moveTo(3100,1000);
-    int[] size = new int[2];
-    Scanner scanner = new Scanner(System.in);
-    System.out.print("\033[6n");
-    try
-    {
-      Robot enterpresser = new Robot();
-      enterpresser.keyPress(10);
-      enterpresser.keyRelease(10);
-    }
-    catch (AWTException e)
-    {
-      e.printStackTrace();
-    }
-    String response = scanner.next();
-    t.clearScreen();
-    scanner.close();
-    String[] splitresponse = response.split(";");
-    size[0] = Integer.parseInt( splitresponse[0].substring(2, splitresponse[0].length()));
-    size[1] = Integer.parseInt( splitresponse[1].substring(0, splitresponse[1].length()-1));
 
-    return size;
-  }
   private String generateLowerRoad(){
     String lowerRoad = "";
     for(int i = 0; i< this.terminalWidth; i++){

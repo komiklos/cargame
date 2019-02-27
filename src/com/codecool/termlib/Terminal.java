@@ -1,5 +1,7 @@
 package com.codecool.termlib;
-
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.awt.*;
 public class Terminal {
     /**
      * The beginning of control sequences.
@@ -40,6 +42,30 @@ public class Terminal {
      *
      * Might reset cursor position.
      */
+     public int[] getTerminalSize(){
+       moveTo(3100,1000);
+       int[] size = new int[2];
+       Scanner scanner = new Scanner(System.in);
+       System.out.print("\033[6n");
+       try
+       {
+         Robot enterpresser = new Robot();
+         enterpresser.keyPress(10);
+         enterpresser.keyRelease(10);
+       }
+       catch (AWTException e)
+       {
+         e.printStackTrace();
+       }
+       String response = scanner.next();
+       clearScreen();
+       scanner.close();
+       String[] splitresponse = response.split(";");
+       size[0] = Integer.parseInt( splitresponse[0].substring(2, splitresponse[0].length()));
+       size[1] = Integer.parseInt( splitresponse[1].substring(0, splitresponse[1].length()-1));
+
+       return size;
+     }
     public void clearScreen() {
       System.out.println(CONTROL_CODE + CLEAR);
     }
