@@ -67,10 +67,10 @@ public class Game{
   }
   private void printCar(int status){
     String[] car = new String[4];
-    car[0] = "      ____";
-    car[1] = "  ___//_]|_______";
-    car[2] = " (o _ |  -|     o|";
-    car[3] = "  `(_)-------(_)-'";
+    car[0] = "  ______";
+    car[1] = " /|_||_\\`.__";
+    car[2] = "(   _    _ _\\";
+    car[3] = "=`-(_)--(_)-'";
     for(int i = 0; i < 4; i++){
       t.moveTo(this.terminalHeight-5+i,this.terminalWidth/2);
       System.out.print(car[i]);
