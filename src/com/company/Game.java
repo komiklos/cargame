@@ -1,15 +1,18 @@
 package com.company;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import com.codecool.termlib.*;
 import java.awt.*;
 
-public class Game{
+public class Game {
+
   private int[] terminalSize = new int[2];
   private int terminalHeight;
   private int terminalWidth;
   private Terminal t = new Terminal();
   private Queue<Character> road = new LinkedList<>();
+
   public void init(){
     t.clearScreen();
     this.terminalSize = t.getTerminalSize();
@@ -20,30 +23,26 @@ public class Game{
     generateRoad();
     printUpperRoad();
     printCar(0);
-
-
-
   }
+
   public void run(){
     int pieceCounter = 0;
     int rangeOfRandom = 95; //have to be an odd number, mégegy helyen bekéri
     int[] holeArray = new int[2];
 
     while (true) {
-      try
-      {
+      try{
           Thread.sleep(100);
           holeArray = holeGen(25, pieceCounter, rangeOfRandom);
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
-
       }
-      catch(InterruptedException ex)
-      {
+      catch(InterruptedException ex){
         Thread.currentThread().interrupt();
       }
     }
   }
+
   private int[] holeGen(int distance, int pieceCounter, int rangeOfRandom){
     clearUpperRoad();
     Random randomGenerator = new Random();
@@ -61,14 +60,15 @@ public class Game{
         rangeOfRandom -= 2;
         moveRoad('#');
       }
-
     }
     printUpperRoad();
     int[] resultArray = new int[2];
     resultArray[0] = pieceCounter;
     resultArray[1] = rangeOfRandom;
+
     return resultArray;
   }
+
   private String generateLowerRoad(){
     String lowerRoad = "";
     for(int i = 0; i< this.terminalWidth; i++){
@@ -76,15 +76,18 @@ public class Game{
     }
     return lowerRoad;
   }
+
   private void generateRoad(){
     for(int i = 0; i< this.terminalWidth; i++){
       this.road.add('#');
     }
   }
+
   private void moveRoad(char roadPiece){
     this.road.remove();
     this.road.add(roadPiece);
   }
+
   private void clearUpperRoad(){
     t.moveTo(this.terminalHeight-1,terminalWidth);
     t.eraseLine();
@@ -96,6 +99,7 @@ public class Game{
       System.out.print(ch);
     }
   }
+
   private void printCar(int status){
     String[] car = new String[4];
     car[0] = "  ______";
@@ -106,7 +110,5 @@ public class Game{
       t.moveTo(this.terminalHeight-5+i,this.terminalWidth/4);
       System.out.print(car[i]);
     }
-
-
   }
 }
