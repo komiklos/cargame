@@ -96,8 +96,10 @@ public class Game extends Thread{
     if(road.charAt(this.terminalWidth/4 + 4) == ' ' || road.charAt(this.terminalWidth/4 + 9) == ' '){
       if(this.carStatus == 0){
         return true;
+      }else {
+        this.score+=1;
       }
-    }else{
+    }else {
       this.score+=1;
     }
     return false;

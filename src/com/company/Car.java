@@ -93,7 +93,7 @@ class Car extends Thread {
           System.out.print(car[i]);
         }
 
-        t.moveTo(this.terminalHeight / 2 -2 , this.terminalWidth /2 -2);
+        t.moveTo(this.terminalHeight / 2 -2 , this.terminalWidth /2 -1);
         System.out.print("YOU CRASHED");
 
     }
