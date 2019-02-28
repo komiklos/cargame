@@ -14,7 +14,7 @@ public class Game extends Thread{
   private int score;
   private Terminal t = new Terminal();
   private String road = "";
-  private int time = 100;
+  private int time = 70;
   public static int carStatus = 0;
 
   public void init(){
@@ -42,14 +42,12 @@ public class Game extends Thread{
     int remainingHoles = 0;
     int[] holeArray = new int[3];
     char wheel = '-';
-    int minRefreshMs = 30;
+    int minRefreshMs = 20;
     char input;
 
     while (true) {
       try{
           Thread.sleep(this.time);
-
-
           printScore();
           holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
           pieceCounter = holeArray[0];
@@ -57,9 +55,11 @@ public class Game extends Thread{
           remainingHoles = holeArray[2];
           if(checkDeath()){
               c.carDeath();
+              c.isAlive = false;
               break;
+
           }
-          if(score % 200 == 0 && this.time > minRefreshMs){
+          if(score % 120 == 0 && this.time > minRefreshMs){
             this.time-=10;
           }
           switch(wheel){

@@ -6,9 +6,11 @@ import com.codecool.termlib.*;
 
 class Car extends Thread {
 
-    int terminalWidth;
-    int terminalHeight;
+    private int terminalWidth;
+    private int terminalHeight;
     private Terminal t = new Terminal();
+    public boolean isAlive = true;
+
 
     public Car(int termW, int termH){
         this.terminalWidth = termW;
@@ -23,7 +25,7 @@ class Car extends Thread {
     public void run(){
        char wheel = '-';
        init();
-       while(true){
+       while(this.isAlive){
            char input = tryToRead();
            if (input != 'k') {
               jump();
@@ -37,7 +39,7 @@ class Car extends Thread {
                 clearCar(5+Game.carStatus);
                 Game.carStatus += 1;
                 printCar(5+Game.carStatus);
-                Thread.sleep(250);
+                Thread.sleep(200);
             }
             for(int i =0;i<3;i++){
                 clearCar(5+Game.carStatus);
@@ -93,5 +95,6 @@ class Car extends Thread {
 
         t.moveTo(this.terminalHeight / 2 -2 , this.terminalWidth /2 -2);
         System.out.print("YOU CRASHED");
+
     }
 }
