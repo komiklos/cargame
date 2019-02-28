@@ -15,6 +15,8 @@ public class Game {
   private Terminal t = new Terminal();
   private String road = "";
   private int time = 40;
+  private int loopCount = 0;
+  private int wheelPosition = 2;
 
   public void init(){
     t.clearScreen();
@@ -26,7 +28,8 @@ public class Game {
     System.out.print(generateLowerRoad());
     generateRoad();
     printUpperRoad();
-    printCar(0,5);
+    printCar(5);
+    printTitle();
   }
 
   public void run(){
@@ -35,23 +38,36 @@ public class Game {
     int remainingHoles = 0;
     int[] holeArray = new int[3];
     char wheel = '-';
-    int minRefreshMs = 30;
+    int minRefreshMs = 15;
     char input;
+
     while (true) {
       try{
-          input = tryToRead();
-          if (input != 'k') {
+          if (checkDeath()) {
+            carDeath();
             break;
           }
+          input = tryToRead();
+          if (input != 'k' && loopCount == 0) {
+            loopCount = 1;
+          }
+          if (loopCount == makeLoopCountDinamic(18)) {
+            loopCount = 0;
+            wheelPosition = 2;
+          }
+          if (loopCount > 0 ) {
+            loopCount++;
+          }
+          moveCar();
           Thread.sleep(this.time);
-          checkDeath(0);
+          checkDeath();
           printScore();
           holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
           remainingHoles = holeArray[2];
           if(score % 50 == 0 && this.time > minRefreshMs){
-            this.time-=10;
+            this.time-=1;
           }
           switch(wheel){
             case '-':
@@ -93,21 +109,30 @@ public class Game {
     return 'k';
   }
 
+  private void printTitle(){
+    String title = new String();
+    title = "Hungarian road simulator 2019";
+    t.moveTo(this.terminalHeight/4, (this.terminalWidth/2)-title.length()/2);
+    System.out.println(title);
+  }
+
   private void moveWheel(char wheel){
-    t.moveTo(this.terminalHeight-2,this.terminalWidth/4 + 4);
+    t.moveTo(this.terminalHeight-this.wheelPosition,this.terminalWidth/4 + 4);
     System.out.print(wheel);
-    t.moveTo(this.terminalHeight-2,this.terminalWidth/4 + 9);
+    t.moveTo(this.terminalHeight-this.wheelPosition,this.terminalWidth/4 + 9);
     System.out.print(wheel);
   }
 
   private void printScore(){
-      t.moveTo(this.terminalHeight / 2, this.terminalWidth /2);
-      System.out.print("Score: "+score);
+      String scoreString = new String();
+      scoreString = "Score: "+ score;
+      t.moveTo(this.terminalHeight / 2, (this.terminalWidth /2)-scoreString.length()/2);
+      System.out.print(scoreString);
   }
 
-  private boolean checkDeath(int jumpStatus){
+  private boolean checkDeath(){
     if(road.charAt(this.terminalWidth/4 + 4) == ' ' || road.charAt(this.terminalWidth/4 + 9) == ' '){
-      if(jumpStatus == 0){
+      if(this.wheelPosition == 2){
         return true;
       }
     }else{
@@ -185,7 +210,7 @@ public class Game {
     System.out.print(this.road);
   }
 
-  private void printCar(int status, int topOfCar){
+  private void printCar(int topOfCar){
     String[] car = new String[4];
     car[0] = "  ______";
     car[1] = " /|_||_\\`.__";
@@ -196,4 +221,57 @@ public class Game {
       System.out.print(car[i]);
     }
   }
+
+  private void deleteCar(int topOfCar) {
+    for(int i = 0; i < 4; i++){
+      t.moveTo(this.terminalHeight-topOfCar+i,this.terminalWidth);
+      t.eraseLine();
+    }
+  }
+
+  private void moveCar() {
+
+      if (this.loopCount == 0) {
+
+        this.wheelPosition = 2;
+      }
+      else if (this.loopCount == 2){
+        deleteCar(5);
+        printCar(6);
+        this.wheelPosition++;
+      }
+      else if (this.loopCount == makeLoopCountDinamic(8)){
+        deleteCar(6);
+        printCar(7);
+        this.wheelPosition++;
+      }
+      else if (this.loopCount == makeLoopCountDinamic(13)){
+        deleteCar(7);
+        printCar(6);
+        this.wheelPosition--;
+      }
+      else if (this.loopCount == makeLoopCountDinamic(18)){ //you need to change this above too
+        deleteCar(6);
+        printCar(5);
+        this.wheelPosition--;
+      }
+  }
+
+  public int makeLoopCountDinamic(int baseLoopNumber){
+    int baseTime = 40;
+    return baseLoopNumber * baseTime/time;
+  }
+
+  public void carDeath(){
+        deleteCar(5);
+        String[] car = new String[4];
+        car[0] = "  ___ ___";
+        car[1] = " /|_| |_\\` ._";
+        car[2] = "=`-(o)---'\\ // \\ (0)";
+
+        for(int i = 0; i < 3; i++){
+          t.moveTo(this.terminalHeight-4+i,this.terminalWidth/4);
+          System.out.print(car[i]);
+        }
+    }
 }
