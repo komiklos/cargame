@@ -18,11 +18,13 @@ public class Game extends Thread{
   public static int carStatus = 0;
 
   public void init(){
+
     t.clearScreen();
     this.terminalSize = t.getTerminalSize();
     this.terminalHeight = this.terminalSize[0];
     this.score = 0;
     this.terminalWidth = this.terminalSize[1];
+    printTitle();
     t.moveTo(terminalHeight,1);
     System.out.print(generateLowerRoad());
     generateRoad();
@@ -40,18 +42,23 @@ public class Game extends Thread{
     int remainingHoles = 0;
     int[] holeArray = new int[3];
     char wheel = '-';
-    int minRefreshMs = 40;
+    int minRefreshMs = 30;
     char input;
 
     while (true) {
       try{
           Thread.sleep(this.time);
-          checkDeath();
+
+
           printScore();
           holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
           remainingHoles = holeArray[2];
+          if(checkDeath()){
+              c.carDeath();
+              break;
+          }
           if(score % 200 == 0 && this.time > minRefreshMs){
             this.time-=10;
           }
@@ -88,11 +95,12 @@ public class Game extends Thread{
   private boolean checkDeath(){
     if(road.charAt(this.terminalWidth/4 + 4) == ' ' || road.charAt(this.terminalWidth/4 + 9) == ' '){
       if(this.carStatus == 0){
-        this.score -= 1;
+        return true;
       }
     }else{
       this.score+=1;
     }
+    return false;
   }
 
   private int[] holeGen(int distance, int pieceCounter, int rangeOfRandom,int remainingHoles){
@@ -183,4 +191,8 @@ public class Game extends Thread{
     return 'k';
   }
 
+  private void printTitle(){
+      t.moveTo(2, this.terminalWidth/4);
+      System.out.print("Hungarian Road Simulator 2019");
+  }
 }

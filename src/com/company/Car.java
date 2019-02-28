@@ -78,4 +78,20 @@ class Car extends Thread {
       }
       return 'k';
     }
+
+    public void carDeath(){
+        clearCar(5);
+        String[] car = new String[4];
+        car[0] = "  ___ ___";
+        car[1] = " /|_| |_\\` ._";
+        car[2] = "=`-(o)---'\\ // \\ (0)";
+
+        for(int i = 0; i < 3; i++){
+          t.moveTo(this.terminalHeight-4+i,this.terminalWidth/4);
+          System.out.print(car[i]);
+        }
+
+        t.moveTo(this.terminalHeight / 2 -2 , this.terminalWidth /2 -2);
+        System.out.print("YOU CRASHED");
+    }
 }
