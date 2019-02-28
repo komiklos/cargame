@@ -14,7 +14,8 @@ public class Game extends Thread{
   private int score;
   private Terminal t = new Terminal();
   private String road = "";
-  private int time = 40;
+  private int time = 100;
+  public static int carStatus = 0;
 
   public void init(){
     t.clearScreen();
@@ -26,34 +27,52 @@ public class Game extends Thread{
     System.out.print(generateLowerRoad());
     generateRoad();
     printUpperRoad();
-    Car c = new Car(this.terminalWidth, this.terminalHeight);
-    c.start();
+
   }
 
   @Override
   public void run(){
     init();
+    Car c = new Car(this.terminalWidth, this.terminalHeight);
+    c.start();
     int pieceCounter = 0;
     int rangeOfRandom = 71; //have to be an odd number, mégegy helyen bekéri
     int remainingHoles = 0;
     int[] holeArray = new int[3];
     char wheel = '-';
-    int minRefreshMs = 30;
+    int minRefreshMs = 40;
     char input;
 
     while (true) {
       try{
           Thread.sleep(this.time);
-          checkDeath(0);
+          checkDeath();
           printScore();
           holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
           remainingHoles = holeArray[2];
-          if(score % 50 == 0 && this.time > minRefreshMs){
+          if(score % 200 == 0 && this.time > minRefreshMs){
             this.time-=10;
           }
-
+          switch(wheel){
+            case '-':
+              moveWheel('\\');
+              wheel = '\\';
+              break;
+            case '\\':
+              moveWheel('|');
+              wheel = '|';
+              break;
+            case '|':
+              moveWheel('/');
+              wheel = '/';
+              break;
+            case '/':
+              moveWheel('-');
+              wheel = '-';
+              break;
+          }
       }
       catch(InterruptedException ex){
         Thread.currentThread().interrupt();
@@ -66,15 +85,14 @@ public class Game extends Thread{
       System.out.print("Score: "+score);
   }
 
-  private boolean checkDeath(int jumpStatus){
+  private boolean checkDeath(){
     if(road.charAt(this.terminalWidth/4 + 4) == ' ' || road.charAt(this.terminalWidth/4 + 9) == ' '){
-      if(jumpStatus == 0){
-        return true;
+      if(this.carStatus == 0){
+        this.score -= 1;
       }
     }else{
       this.score+=1;
     }
-      return false;
   }
 
   private int[] holeGen(int distance, int pieceCounter, int rangeOfRandom,int remainingHoles){
@@ -118,6 +136,13 @@ public class Game extends Thread{
     return resultArray;
   }
 
+  private void moveWheel(char wheel){
+    t.moveTo(this.terminalHeight-2-this.carStatus,this.terminalWidth/4 + 4);
+    System.out.print(wheel);
+    t.moveTo(this.terminalHeight-2-this.carStatus,this.terminalWidth/4 + 9);
+    System.out.print(wheel);
+  }
+
   private String generateLowerRoad(){
     String lowerRoad = "";
     for(int i = 0; i< this.terminalWidth; i++){
@@ -146,15 +171,16 @@ public class Game extends Thread{
     System.out.print(this.road);
   }
 
-  // private void printCar(int status, int topOfCar){
-  //   String[] car = new String[4];
-  //   car[0] = "  ______";
-  //   car[1] = " /|_||_\\`.__";
-  //   car[2] = "(   _    _ _\\";
-  //   car[3] = "=`-(o)--(o)-'";
-  //   for(int i = 0; i < 4; i++){
-  //     t.moveTo(this.terminalHeight-topOfCar+i,this.terminalWidth/4);
-  //     System.out.print(car[i]);
-  //   }
-  // }
+  private Character tryToRead() {
+    try {
+        if (System.in.available() > 0) {
+            return (char)System.in.read();
+        }
+    }
+    catch (IOException e) {
+      // System.err.println("error" + e.getMessage());
+    }
+    return 'k';
+  }
+
 }
