@@ -48,16 +48,7 @@ public class Game {
             break;
           }
           input = tryToRead();
-          if (input != 'k' && loopCount == 0) {
-            loopCount = 1;
-          }
-          if (loopCount == makeLoopCountDinamic(18)) {
-            loopCount = 0;
-            wheelPosition = 2;
-          }
-          if (loopCount > 0 ) {
-            loopCount++;
-          }
+          changeLoopCount(input);
           moveCar();
           Thread.sleep(this.time);
           checkDeath();
@@ -66,30 +57,8 @@ public class Game {
           pieceCounter = holeArray[0];
           rangeOfRandom = holeArray[1];
           remainingHoles = holeArray[2];
-          if(score % 50 == 0 && this.time > minRefreshMs){
-            this.time-=1;
-          }
-          switch(wheel){
-            case '-':
-              moveWheel('\\');
-              wheel = '\\';
-              break;
-            case '\\':
-              moveWheel('|');
-              wheel = '|';
-              break;
-            case '|':
-              moveWheel('/');
-              wheel = '/';
-              break;
-            case '/':
-              moveWheel('-');
-              wheel = '-';
-              break;
-
-          }
-
-
+          changeTime(minRefreshMs);
+          wheel = changeWheel(wheel);
       }
       catch(InterruptedException ex){
         Thread.currentThread().interrupt();
@@ -109,11 +78,30 @@ public class Game {
     return 'k';
   }
 
+  private void changeTime(int minRefreshMs) {
+    if(this.score % 50 == 0 && this.time > minRefreshMs){
+      this.time-=1;
+    }
+  }
+
   private void printTitle(){
     String title = new String();
     title = "Hungarian road simulator 2019";
     t.moveTo(this.terminalHeight/4, (this.terminalWidth/2)-title.length()/2);
     System.out.println(title);
+  }
+
+  private void changeLoopCount(char input) {
+    if (input != 'k' && this.loopCount == 0) {
+      this.loopCount = 1;
+    }
+    if (this.loopCount == makeLoopCountDinamic(18)) {
+      this.loopCount = 0;
+      this.wheelPosition = 2;
+    }
+    if (this.loopCount > 0 ) {
+      this.loopCount++;
+    }
   }
 
   private void moveWheel(char wheel){
@@ -122,6 +110,26 @@ public class Game {
     t.moveTo(this.terminalHeight-this.wheelPosition,this.terminalWidth/4 + 9);
     System.out.print(wheel);
   }
+
+
+  private char changeWheel (char wheel) {
+    switch(wheel){
+      case '-':
+        moveWheel('\\');
+        return '\\';
+      case '\\':
+        moveWheel('|');
+        return '|';
+      case '|':
+        moveWheel('/');
+        return '/';
+      case '/':
+        moveWheel('-');
+        return '-';
+    }
+    return '-';
+  }
+
 
   private void printScore(){
       String scoreString = new String();
