@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import com.codecool.termlib.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class Game {
 
@@ -35,9 +36,13 @@ public class Game {
     int[] holeArray = new int[3];
     char wheel = '-';
     int minRefreshMs = 30;
-
+    char input;
     while (true) {
       try{
+          input = tryToRead();
+          if (input != 'k') {
+            break;
+          }
           Thread.sleep(this.time);
           checkDeath(0);
           printScore();
@@ -74,6 +79,18 @@ public class Game {
         Thread.currentThread().interrupt();
       }
     }
+  }
+
+  private Character tryToRead() {
+    try {
+        if (System.in.available() > 0) {
+            return (char)System.in.read();
+        }
+    }
+    catch (IOException e) {
+      System.err.println("error" + e.getMessage());
+    }
+    return 'k';
   }
 
   private void moveWheel(char wheel){
