@@ -62,29 +62,31 @@ public class Game extends Thread{
           if(score % 120 == 0 && this.time > minRefreshMs){
             this.time-=10;
           }
-          switch(wheel){
-            case '-':
-              moveWheel('\\');
-              wheel = '\\';
-              break;
-            case '\\':
-              moveWheel('|');
-              wheel = '|';
-              break;
-            case '|':
-              moveWheel('/');
-              wheel = '/';
-              break;
-            case '/':
-              moveWheel('-');
-              wheel = '-';
-              break;
-          }
+          wheel = rotateWheel(wheel);
+
       }
       catch(InterruptedException ex){
         Thread.currentThread().interrupt();
       }
     }
+  }
+
+  private char rotateWheel(char wheel){
+      switch(wheel){
+        case '-':
+          wheel = moveWheel('\\');
+          break;
+        case '\\':
+          wheel= moveWheel('|');
+          break;
+        case '|':
+          wheel = moveWheel('/');
+          break;
+        case '/':
+          wheel= moveWheel('-');
+          break;
+      }
+      return wheel;
   }
 
   private void printScore(){
@@ -146,11 +148,12 @@ public class Game extends Thread{
     return resultArray;
   }
 
-  private void moveWheel(char wheel){
+  private char moveWheel(char wheel){
     t.moveTo(this.terminalHeight-2-this.carStatus,this.terminalWidth/4 + 4);
     System.out.print(wheel);
     t.moveTo(this.terminalHeight-2-this.carStatus,this.terminalWidth/4 + 9);
     System.out.print(wheel);
+    return wheel;
   }
 
   private String generateLowerRoad(){
