@@ -184,18 +184,6 @@ public class Game extends Thread{
     System.out.print(this.road);
   }
 
-  private Character tryToRead() {
-    try {
-        if (System.in.available() > 0) {
-            return (char)System.in.read();
-        }
-    }
-    catch (IOException e) {
-      // System.err.println("error" + e.getMessage());
-    }
-    return 'k';
-  }
-
   private void printTitle(){
       t.moveTo(2, this.terminalWidth/4);
       System.out.print("Hungarian Road Simulator 2019");
