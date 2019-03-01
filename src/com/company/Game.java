@@ -46,31 +46,35 @@ public class Game extends Thread{
     char input;
 
     while (true) {
+      sleep(this.time);
+      printScore();
+      holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
+      pieceCounter = holeArray[0];
+      rangeOfRandom = holeArray[1];
+      remainingHoles = holeArray[2];
+      if(checkDeath()){
+          c.carDeath();
+          c.isAlive = false;
+          break;
+
+      }
+      if(score % 120 == 0 && this.time > minRefreshMs){
+        this.time-=10;
+      }
+      wheel = rotateWheel(wheel);
+    }
+  }
+
+
+  private void sleep(int sleepTime){
       try{
-          Thread.sleep(this.time);
-          printScore();
-          holeArray = holeGen(25, pieceCounter, rangeOfRandom, remainingHoles);
-          pieceCounter = holeArray[0];
-          rangeOfRandom = holeArray[1];
-          remainingHoles = holeArray[2];
-          if(checkDeath()){
-              c.carDeath();
-              c.isAlive = false;
-              break;
-
-          }
-          if(score % 120 == 0 && this.time > minRefreshMs){
-            this.time-=10;
-          }
-          wheel = rotateWheel(wheel);
-
+          Thread.sleep(sleepTime);
       }
       catch(InterruptedException ex){
         Thread.currentThread().interrupt();
       }
-    }
   }
-
+  
   private char rotateWheel(char wheel){
       switch(wheel){
         case '-':

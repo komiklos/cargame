@@ -34,21 +34,18 @@ class Car extends Thread {
     }
 
     public void jump(){
-        try{
-            for(int i =0;i<3;i++){
-                clearCar(5+Game.carStatus);
-                Game.carStatus += 1;
-                printCar(5+Game.carStatus);
-                Thread.sleep(200);
-            }
-            for(int i =0;i<3;i++){
-                clearCar(5+Game.carStatus);
-                Game.carStatus -= 1;
-                printCar(5+Game.carStatus);
-                Thread.sleep(250);
-            }
-
-        }catch(InterruptedException ex){}
+        for(int i =0;i<3;i++){
+            clearCar(5+Game.carStatus);
+            Game.carStatus += 1;
+            printCar(5+Game.carStatus);
+            sleep(200);
+        }
+        for(int i =0;i<3;i++){
+            clearCar(5+Game.carStatus);
+            Game.carStatus -= 1;
+            printCar(5+Game.carStatus);
+            sleep(200);
+        }
     }
 
     private void printCar(int topOfCar){
@@ -79,6 +76,15 @@ class Car extends Thread {
         // System.err.println("error" + e.getMessage());
       }
       return 'k';
+    }
+
+    private void sleep(int sleepTime){
+        try{
+            Thread.sleep(sleepTime);
+        }
+        catch(InterruptedException ex){
+          Thread.currentThread().interrupt();
+        }
     }
 
     public void carDeath(){
